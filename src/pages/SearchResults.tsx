@@ -20,21 +20,20 @@ const SearchResults = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!query) {
-      setMeals([]);
-      setLoading(false);
-      return;
-    }
-
     const fetchResults = async () => {
       try {
         setLoading(true);
 
-        const res = await searchMeals(query);
+        if (!query) {
+          setMeals([]);
+          return;
+        }
 
+        const res = await searchMeals(query);
         setMeals(res.data.meals || []);
       } catch (error) {
         console.error(error);
+        setMeals([]);
       } finally {
         setLoading(false);
       }
@@ -67,10 +66,7 @@ const SearchResults = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 max-w-6xl mx-auto">
         {meals.map((meal) => (
-          <MealCard
-            key={meal.idMeal}
-            meal={meal}
-          />
+          <MealCard key={meal.idMeal} meal={meal} />
         ))}
       </div>
     </div>
